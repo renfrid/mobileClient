@@ -14,7 +14,7 @@
 
 package org.sacids.android.activities;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.provider.InstanceProviderAPI;
 import org.sacids.android.provider.InstanceProviderAPI.InstanceColumns;

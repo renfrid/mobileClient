@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.activities.NotificationActivity;
 import org.sacids.android.application.Collect;
 import org.sacids.android.listeners.InstanceUploaderListener;

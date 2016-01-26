@@ -23,7 +23,7 @@ import org.kxml2.kdom.Node;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 
 import java.io.File;

@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.utilities.ColorPickerDialog;
 import org.sacids.android.utilities.FileUtils;

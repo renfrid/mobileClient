@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.listeners.InstanceUploaderListener;
 import org.sacids.android.logic.PropertyManager;

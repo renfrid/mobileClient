@@ -16,7 +16,7 @@ package org.sacids.android.application;
 
 import java.io.File;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.database.ActivityLogger;
 import org.sacids.android.external.ExternalDataManager;
 import org.sacids.android.logic.FormController;

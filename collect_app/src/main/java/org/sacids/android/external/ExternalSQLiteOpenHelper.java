@@ -22,7 +22,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import au.com.bytecode.opencsv.CSVReader;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.database.ODKSQLiteOpenHelper;
 import org.sacids.android.exception.ExternalDataException;

@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.preferences.AdminPreferencesActivity;
 import org.sacids.android.preferences.PreferencesActivity;

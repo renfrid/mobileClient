@@ -1,7 +1,7 @@
 
 package org.sacids.android.activities;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 
 import android.app.Activity;

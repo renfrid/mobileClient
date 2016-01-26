@@ -18,7 +18,7 @@ import android.widget.*;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.activities.BearingActivity;
 import org.sacids.android.activities.FormEntryActivity;
 import org.sacids.android.application.Collect;

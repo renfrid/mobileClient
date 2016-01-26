@@ -11,7 +11,7 @@ import org.javarosa.core.model.data.StringData;
 import org.javarosa.core.model.osm.OSMTag;
 import org.javarosa.core.model.osm.OSMTagItem;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.activities.FormEntryActivity;
 import org.sacids.android.application.Collect;
 import org.sacids.android.logic.FormController;

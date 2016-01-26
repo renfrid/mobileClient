@@ -27,7 +27,7 @@ import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.external.ExternalDataUtil;
 import org.sacids.android.external.ExternalSelectChoice;
 import org.sacids.android.utilities.FileUtils;

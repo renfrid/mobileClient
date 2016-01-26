@@ -16,7 +16,7 @@ package org.sacids.android.activities;
 
 import java.util.ArrayList;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.provider.FormsProviderAPI.FormsColumns;
 
 import android.app.Activity;

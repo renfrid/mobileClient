@@ -30,7 +30,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.instance.TreeReference;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.activities.FormEntryActivity;
 import org.sacids.android.application.Collect;
 import org.sacids.android.exception.ExternalParamsException;

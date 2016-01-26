@@ -24,7 +24,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 
 import org.javarosa.core.model.FormDef;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.utilities.CompatibilityUtils;
 

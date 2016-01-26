@@ -14,7 +14,7 @@
 
 package org.sacids.android.utilities;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 
 import android.content.Context;
 import android.database.Cursor;

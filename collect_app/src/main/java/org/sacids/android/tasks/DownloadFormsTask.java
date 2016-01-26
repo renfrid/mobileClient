@@ -26,7 +26,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Element;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.exception.TaskCancelledException;
 import org.sacids.android.listeners.FormDownloaderListener;

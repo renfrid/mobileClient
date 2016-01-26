@@ -17,7 +17,7 @@ package org.sacids.android.preferences;
 import java.util.ArrayList;
 
 import org.javarosa.core.services.IPropertyManager;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.logic.FormController;
 import org.sacids.android.logic.PropertyManager;
 import org.sacids.android.utilities.MediaUtils;

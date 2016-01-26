@@ -22,7 +22,7 @@ import java.io.RandomAccessFile;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.services.transport.payload.ByteArrayPayload;
 import org.javarosa.form.api.FormEntryController;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.exception.EncryptionException;
 import org.sacids.android.listeners.FormSavedListener;

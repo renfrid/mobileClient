@@ -19,7 +19,7 @@
 package org.sacids.android.external;
 
 import android.util.Log;
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.exception.ExternalDataException;
 

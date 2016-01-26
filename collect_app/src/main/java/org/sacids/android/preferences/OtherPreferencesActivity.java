@@ -14,7 +14,7 @@
 
 package org.sacids.android.preferences;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

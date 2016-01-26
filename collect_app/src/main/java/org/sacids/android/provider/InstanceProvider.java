@@ -14,7 +14,7 @@
 
 package org.sacids.android.provider;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.database.ODKSQLiteOpenHelper;
 import org.sacids.android.provider.InstanceProviderAPI.InstanceColumns;

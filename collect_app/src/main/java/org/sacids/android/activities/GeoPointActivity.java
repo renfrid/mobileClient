@@ -17,7 +17,7 @@ package org.sacids.android.activities;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import org.odk.collect.android.R;
+import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.utilities.InfoLogger;
 import org.sacids.android.widgets.GeoPointWidget;
