@@ -16,11 +16,39 @@ the License.
 -->
 <resources>
 
+    <drawable name="white">#ffffffff</drawable>
+    <drawable name="black">#ff000000</drawable>
+
+
     <color name="primaryColor">#9b242d</color>
     <color name="primaryColorDark">#380d10</color>
     <color name="accentColor">#448aff</color>
 
-    <drawable name="white">#ffffffff</drawable>
-    <drawable name="black">#ff000000</drawable>
+    <color name="transparentBlack">#90000000</color>
+    <color name="time_green">#9ACB00</color>
 
+    <color name="opaque_red">#f00</color>
+    <color name="white">#FFFFFF</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="fuchsia">#FF00FF</color>
+    <color name="red">#FF0000</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="gray">#808080</color>
+    <color name="olive">#808000</color>
+    <color name="purple">#800080</color>
+    <color name="maroon">#800000</color>
+    <color name="green">#008000</color>
+    <color name="blue">#0000FF</color>
+    <color name="black">#000000</color>
+    <color name="Orange">#FFA500</color>
+    <color name="LightSalmon">#FFA07A</color>
+    <color name="DarkOrange">#FF8C00</color>
+    <color name="Coral">#FF7F50</color>
+    <color name="HotPink">#FF69B4</color>
+    <color name="Tomato">#FF6347</color>
+    <color name="OrangeRed">#FF4500</color>
+    <color name="Red">#FF0000</color>
+    <color name="Salmon">#FA8072</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

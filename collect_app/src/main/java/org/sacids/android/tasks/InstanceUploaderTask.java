@@ -437,6 +437,9 @@ public class InstanceUploaderTask extends AsyncTask<Long, Integer, InstanceUploa
             HttpResponse response = null;
             try {
                 Log.i(t, "Issuing POST request for " + id + " to: " + u.toString());
+
+                Log.d(t,"httppost"+httppost.toString()+"\n localContext"+localContext.toString());
+
                 response = httpclient.execute(httppost, localContext);
                 int responseCode = response.getStatusLine().getStatusCode();
                 WebUtils.discardEntityBytes(response);

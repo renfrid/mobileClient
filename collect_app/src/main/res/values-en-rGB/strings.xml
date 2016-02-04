@@ -238,4 +238,6 @@
   <string name="view_change_location">tazama au badilisha eneo</string>
   <string name="change_server_url">URL ya Seva</string>
   <string name="action_change_language">Badilisha lugha</string>
+  <string name="title_activity_survery_form_status">Taarifa za fomu</string>
+  <string name="edit_form">Hariri fomu</string>
 </resources>

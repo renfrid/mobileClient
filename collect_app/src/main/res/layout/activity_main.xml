@@ -3,18 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.sacids.android.MainActivity"
-    android:weightSum="1">
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:weightSum="1"
+    tools:context="org.sacids.android.MainActivity">
 
     <Button
+        android:id="@+id/btn_start_odk_forms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ODK Forms"
-        android:id="@+id/btn_start_odk_forms"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" />
+        android:text="ODK Forms" />
+
+    <ListView
+        android:id="@+id/lv_survey_forms_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

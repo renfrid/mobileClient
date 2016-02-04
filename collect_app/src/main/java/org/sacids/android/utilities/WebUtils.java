@@ -394,8 +394,7 @@ public final class WebUtils {
 					doc = new Document();
 					KXmlParser parser = new KXmlParser();
 					parser.setInput(isr);
-					parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES,
-							true);
+					parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
 					doc.parse(parser);
 					isr.close();
 					isr = null;
@@ -425,8 +424,7 @@ public final class WebUtils {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				String error = "Parsing failed with " + e.getMessage()
-						+ "while accessing " + u.toString();
+				String error = "Parsing failed with " + e.getMessage() + "while accessing " + u.toString();
 				Log.e(t, error);
 				return new DocumentFetchResult(error, 0);
 			}
