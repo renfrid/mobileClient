@@ -18,9 +18,7 @@ public class SurveyForm implements Parcelable {
     private String instanceFilePath;
     private String jrFormId;
     private String jrVersion;
-
     private String status;
-    private String ngolo;
     private boolean canEditWhenComplete;
     private Date lastStatusChangeDate;
     private String displaySubText;
