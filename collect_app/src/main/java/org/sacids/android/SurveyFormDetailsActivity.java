@@ -8,17 +8,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +34,7 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.sacids.android.adapters.FeedbackListAdapter;
 import org.sacids.android.application.Collect;
 import org.sacids.android.models.Feedback;
 import org.sacids.android.models.SurveyForm;
@@ -51,12 +52,18 @@ public class SurveyFormDetailsActivity extends Activity {
 
     private static final boolean DO_NOT_EXIT = false;
     private AlertDialog mAlertDialog;
+
+
     private static String TAG = "SurveyForm";
 
     private List<Feedback> feedbackList = new ArrayList<Feedback>();
-    private MessagesListAdapter adapter;
-    private ListView lvFeedbacks;
+    private FeedbackListAdapter adapter;
+    private ListView listFeedbacks;
     private Button btnEditForm;
+    private Button btnFeeedback;
+    private EditText editFeedback;
+    private TextView formName;
+    private TextView formStatus;
     private ProgressDialog progressDialog;
 
     private SharedPreferences mSharedPreferences;
@@ -64,6 +71,8 @@ public class SurveyFormDetailsActivity extends Activity {
     private String password;
     private SurveyForm mForm;
     private String serverUrl;
+    private String message = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,35 +80,60 @@ public class SurveyFormDetailsActivity extends Activity {
         setContentView(R.layout.activity_survey_form_details);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME, "");
-        password = mSharedPreferences.getString(PreferencesActivity.KEY_PASSWORD, "");
+        username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME, getString(R.string.default_sacids_username));
+        password = mSharedPreferences.getString(PreferencesActivity.KEY_PASSWORD, getString(R.string.default_sacids_password));
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL, getString(R.string.default_server_url));
 
-        lvFeedbacks = (ListView) findViewById(R.id.lv_feedbacks);
-        btnEditForm = (Button) findViewById(R.id.btn_edit_form);
+        formName = (TextView) findViewById(R.id.tvform_name);
+        formStatus = (TextView) findViewById(R.id.tv_form_status);
+        listFeedbacks = (ListView) findViewById(R.id.list_feedback);
+        editFeedback = (EditText) findViewById(R.id.edit_feedback);
+        btnFeeedback = (Button) findViewById(R.id.btn_submit_feedback);
 
         Bundle b = getIntent().getExtras();
         if (b != null) {
             mForm = b.getParcelable(".models.SurveyForm");
             Log.d(TAG, "From parcel => " + mForm.toString());
 
-            if (mForm.isCanEditWhenComplete()) {
-                btnEditForm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startEditingSavedForm(mForm);
-                    }
-                });
-            } else {
-                if (mForm.getStatus().equalsIgnoreCase(InstanceProviderAPI.STATUS_SUBMITTED))
-                    btnEditForm.setVisibility(View.GONE);
-            }
+            //set form name
+            String form_name = mForm.getDisplayName();
+            formName.setText(form_name);
+
+            //set form status
+            String form_status = mForm.getStatus();
+            formStatus.setText(form_status);
+
             // get feedback from the server
             getFeedbackFromServer();
+
+
+            //if submit feedback
+            btnFeeedback.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    message = editFeedback.getText().toString();
+
+                    if (editFeedback.getText().length() < 1) {
+                        editFeedback.setError("Your feedback is required");
+                    } else {
+                        //post feedback to the server
+                        postFeedbackToServer();
+                    }
+                }
+            });
+
         }
     }
 
     private void getFeedbackFromServer() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
+
+        if (ni == null || !ni.isConnected()) {
+            Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+        }
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Loading feedback...");
@@ -107,10 +141,12 @@ public class SurveyFormDetailsActivity extends Activity {
 
         final RequestParams params = new RequestParams();
         params.add("form_id", mForm.getJrFormId());
-        params.add("username", "username");
+        params.add("username", username);
+
+        String feedbackURL = serverUrl + "/feedback/get_feedback";
 
         // research/feedback/get_feedback
-        RestClient.get(username, password, serverUrl + "/feedback/get_feedback", params, new JsonHttpResponseHandler() {
+        RestClient.get(username, password, feedbackURL, params, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -120,19 +156,21 @@ public class SurveyFormDetailsActivity extends Activity {
                 Log.d(TAG, headers.toString());
 
                 if (statusCode == 200) {
-
                     try {
                         feedbackList = getMessagesFromJsonResponse(response.getJSONArray("feedback"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    Log.d(TAG, "Found " + feedbackList.size() + " feedbacks");
+                    Log.d(TAG, "Found " + feedbackList.size() + " feedback");
 
-                    refreshDisplay();
+                    //feedbackList adapter
+                    adapter = new FeedbackListAdapter(SurveyFormDetailsActivity.this, feedbackList);
+                    listFeedbacks.setAdapter(adapter);
+                    //refreshDisplay();
                 } else if (statusCode == 204) {
                     Log.d(TAG, "No feedback to display");
-                    Toast.makeText(SurveyFormDetailsActivity.this, "No content found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SurveyFormDetailsActivity.this, "No Feedback found", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -142,24 +180,73 @@ public class SurveyFormDetailsActivity extends Activity {
                 progressDialog.dismiss();
 
                 if (statusCode == 401) {
-                    Toast.makeText(SurveyFormDetailsActivity.this, "Un authorized " + responseString, Toast.LENGTH_SHORT).show();
-                }
-                Log.d(TAG, headers.toString());
-                Log.d(TAG, "Failed " + responseString);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                super.onSuccess(statusCode, headers, responseString);
-
-                if (statusCode == 401) {
-                    Toast.makeText(SurveyFormDetailsActivity.this, "Un authorized " + responseString, Toast.LENGTH_SHORT).show();
+                    //TODO apply authentication here
+                    Toast.makeText(SurveyFormDetailsActivity.this, "Unauthorized " + responseString, Toast.LENGTH_SHORT).show();
                 }
                 Log.d(TAG, headers.toString());
                 Log.d(TAG, "Failed " + responseString);
             }
         });
     }
+
+
+    //Function to post details to the server
+    private void postFeedbackToServer() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
+
+        if (ni == null || !ni.isConnected()) {
+            Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+        }
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Posting feedback...");
+        progressDialog.show();
+
+        final RequestParams params = new RequestParams();
+        params.add("form_id", mForm.getJrFormId());
+        params.add("username", username);
+        params.add("message", message);
+
+        String post_feedbackURL = serverUrl + "/feedback/post_feedback";
+
+        // research/feedback/get_feedback
+        RestClient.post(post_feedbackURL, params, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                progressDialog.dismiss();
+                Log.d(TAG, response.toString());
+                Log.d(TAG, headers.toString());
+
+                if (statusCode == 200) {
+                    Log.d(TAG, "Saving feedback success");
+                    Toast.makeText(SurveyFormDetailsActivity.this, "Feedback sent, will get back to you soon", Toast.LENGTH_SHORT).show();
+
+                } else if (statusCode == 204) {
+                    Log.d(TAG, "Saving Feedback failed");
+                    Toast.makeText(SurveyFormDetailsActivity.this, "Failed to send feedback", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                progressDialog.dismiss();
+
+                if (statusCode == 401) {
+                    //TODO apply authentication here
+                    Toast.makeText(SurveyFormDetailsActivity.this, "Unauthorized " + responseString, Toast.LENGTH_SHORT).show();
+                }
+                Log.d(TAG, headers.toString());
+                Log.d(TAG, "Failed " + responseString);
+            }
+        });
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -187,37 +274,6 @@ public class SurveyFormDetailsActivity extends Activity {
     }
 
 
-    private void refreshDisplay() {
-        adapter = new MessagesListAdapter(this, feedbackList);
-        lvFeedbacks.setAdapter(adapter);
-
-        //     Toast.makeText(SurveyFormDetailsActivity.this, "No feedbackList to display", Toast.LENGTH_SHORT).show();
-    }
-
-    private void startEditingSavedForm(SurveyForm surveyForm) {
-        Uri instanceUri = ContentUris.withAppendedId(InstanceProviderAPI.InstanceColumns.CONTENT_URI, surveyForm.getId());
-
-        Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick", instanceUri.toString());
-
-        String action = getIntent().getAction();
-        if (Intent.ACTION_PICK.equals(action)) {
-            // caller is waiting on a picked form
-            setResult(RESULT_OK, new Intent().setData(instanceUri));
-        } else {
-            // the form can be edited if it is incomplete or if, when it was
-            // marked as complete, it was determined that it could be edited
-            // later.
-            String status = surveyForm.getStatus();
-            boolean canEdit = surveyForm.isCanEditWhenComplete();
-            if (!canEdit) {
-                createErrorDialog(getString(R.string.cannot_edit_completed_form), DO_NOT_EXIT);
-                return;
-            }
-            // caller wants to view/edit a form, so launch formentryactivity
-            startActivity(new Intent(Intent.ACTION_EDIT, instanceUri));
-        }
-    }
-
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
         Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
@@ -242,53 +298,6 @@ public class SurveyFormDetailsActivity extends Activity {
         mAlertDialog.setCancelable(false);
         mAlertDialog.setButton(getString(R.string.ok), errorListener);
         mAlertDialog.show();
-    }
-
-
-    class MessagesListAdapter extends BaseAdapter {
-
-        private Context context;
-        private List<Feedback> messageList;
-
-        public MessagesListAdapter(Context context, List<Feedback> feedbacks) {
-            this.context = context;
-            this.messageList = feedbacks;
-        }
-
-        @Override
-        public int getCount() {
-            return messageList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = li.inflate(R.layout.single_message, null);
-
-            Feedback msg = messageList.get(position);
-
-            TextView tv = (TextView) view.findViewById(R.id.tv_message);
-            tv.setText(msg.getMessage());
-
-            tv = (TextView) view.findViewById(R.id.tv_date_sent);
-            tv.setText(msg.getDate().toString());
-
-//            tv = (TextView) view.findViewById(R.id.tv_form_status);
-//            tv.setText(msg.getViewedBy());
-            // change color depending on the form current form status
-
-            return view;
-        }
     }
 
     private List<Feedback> getMessagesFromJsonResponse(JSONArray jsonArray) throws JSONException {
@@ -316,4 +325,5 @@ public class SurveyFormDetailsActivity extends Activity {
         }.getType();
         return gson.fromJson(jsonArray.toString(), listType);
     }
+
 }

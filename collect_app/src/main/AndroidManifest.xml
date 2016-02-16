@@ -253,7 +253,8 @@
             android:label="@string/app_name" />
         <activity
             android:name=".SurveyFormDetailsActivity"
-            android:label="@string/title_activity_survery_form_status" />
+            android:label="@string/title_activity_survery_form_status"
+            android:windowSoftInputMode="stateHidden" />
 
     </application>
 
