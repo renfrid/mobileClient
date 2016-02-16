@@ -24,6 +24,7 @@ public class FormDetails implements Serializable {
 
     public final String errorStr;
 
+
     public final String formName;
     public final String downloadUrl;
     public final String manifestUrl;

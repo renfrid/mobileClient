@@ -46,8 +46,6 @@ public class RestClient {
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {
-//        Log.d("Rest client", "Request page => " + BASE_URL + relativeUrl);
-//        return BASE_URL + relativeUrl;
         Log.d("Rest client", "Request page => " + relativeUrl);
         return relativeUrl;
     }

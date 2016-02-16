@@ -1,4 +1,4 @@
-# collect
+# MobileCollect
 
 This project is __*actively maintained*__
 

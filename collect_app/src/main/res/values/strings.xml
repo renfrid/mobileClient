@@ -344,4 +344,6 @@
     <string name="action_change_language">Change language</string>
     <string name="title_activity_survery_form_status">Form details</string>
     <string name="edit_form">Edit form</string>
+    <string name="edit_feedback">Type your feedback</string>
+    <string name="submit_feedback">Send</string>
 </resources>
