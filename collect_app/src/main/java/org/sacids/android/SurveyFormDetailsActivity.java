@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,7 +61,7 @@ public class SurveyFormDetailsActivity extends Activity {
     private FeedbackListAdapter adapter;
     private ListView listFeedbacks;
     private Button btnEditForm;
-    private Button btnFeeedback;
+    private ImageButton btnFeeedback;
     private EditText editFeedback;
     private TextView formName;
     private TextView formStatus;
@@ -88,7 +89,7 @@ public class SurveyFormDetailsActivity extends Activity {
         formStatus = (TextView) findViewById(R.id.tv_form_status);
         listFeedbacks = (ListView) findViewById(R.id.list_feedback);
         editFeedback = (EditText) findViewById(R.id.edit_feedback);
-        btnFeeedback = (Button) findViewById(R.id.btn_submit_feedback);
+        btnFeeedback = (ImageButton) findViewById(R.id.btn_submit_feedback);
 
         Bundle b = getIntent().getExtras();
         if (b != null) {
@@ -170,7 +171,7 @@ public class SurveyFormDetailsActivity extends Activity {
                     //refreshDisplay();
                 } else if (statusCode == 204) {
                     Log.d(TAG, "No feedback to display");
-                    Toast.makeText(SurveyFormDetailsActivity.this, "No Feedback found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SurveyFormDetailsActivity.this, "No Feedback from server", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -223,10 +224,14 @@ public class SurveyFormDetailsActivity extends Activity {
                 Log.d(TAG, headers.toString());
 
                 if (statusCode == 200) {
+                    //successful post data
+                    editFeedback.setText("");
                     Log.d(TAG, "Saving feedback success");
                     Toast.makeText(SurveyFormDetailsActivity.this, "Feedback sent, will get back to you soon", Toast.LENGTH_SHORT).show();
 
-                } else if (statusCode == 204) {
+                } else if (statusCode == 400) {
+                    //Failed to post
+                    editFeedback.setText("");
                     Log.d(TAG, "Saving Feedback failed");
                     Toast.makeText(SurveyFormDetailsActivity.this, "Failed to send feedback", Toast.LENGTH_SHORT).show();
                 }
@@ -237,9 +242,11 @@ public class SurveyFormDetailsActivity extends Activity {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 progressDialog.dismiss();
 
-                if (statusCode == 401) {
-                    //TODO apply authentication here
-                    Toast.makeText(SurveyFormDetailsActivity.this, "Unauthorized " + responseString, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SurveyFormDetailsActivity.this, responseString, Toast.LENGTH_SHORT);
+
+                if (statusCode == 400) {
+                    //Failed to post
+                    Toast.makeText(SurveyFormDetailsActivity.this, "Failed to send feedback " + responseString, Toast.LENGTH_SHORT).show();
                 }
                 Log.d(TAG, headers.toString());
                 Log.d(TAG, "Failed " + responseString);
@@ -273,33 +280,6 @@ public class SurveyFormDetailsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
-
-        mAlertDialog = new AlertDialog.Builder(this).create();
-        mAlertDialog.setIcon(android.R.drawable.ic_dialog_info);
-        mAlertDialog.setMessage(errorMsg);
-        DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                switch (i) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog",
-                                shouldExit ? "exitApplication" : "OK");
-                        if (shouldExit) {
-                            finish();
-                        }
-                        break;
-                }
-            }
-        };
-        mAlertDialog.setCancelable(false);
-        mAlertDialog.setButton(getString(R.string.ok), errorListener);
-        mAlertDialog.show();
-    }
-
     private List<Feedback> getMessagesFromJsonResponse(JSONArray jsonArray) throws JSONException {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -314,8 +294,8 @@ public class SurveyFormDetailsActivity extends Activity {
                 if (field.getName().equals("formId"))
                     return "form_id";
 
-//                if (field.getName().equals("date"))
-//                    return "date";
+                if (field.getName().equals("date"))
+                    return "created_at";
 
                 return field.getName();
             }
