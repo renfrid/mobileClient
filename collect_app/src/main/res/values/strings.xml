@@ -346,4 +346,7 @@
     <string name="edit_form">Edit form</string>
     <string name="edit_feedback">Type your feedback</string>
     <string name="submit_feedback">Send</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

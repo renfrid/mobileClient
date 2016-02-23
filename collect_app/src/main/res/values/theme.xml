@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="Collect" parent="android:Theme.Light">
-	    <item name="android:scrollbarThumbHorizontal">@+drawable/thumb</item>
-	    <item name="android:scrollbarThumbVertical">@+drawable/thumb</item>
-	    <item name="android:scrollbarSize">1.75mm</item>
-	    <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
-	    <item name="android:fadeScrollbars">false</item>
+<style name="Collect" parent="android:Theme.Light">
+	<item name="android:scrollbarThumbHorizontal">@drawable/thumb</item>
+	<item name="android:scrollbarThumbVertical">@drawable/thumb</item>
+	<item name="android:scrollbarSize">1.75mm</item>
+	<item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+	<item name="android:fadeScrollbars">false</item>
 
-		<!--<item name="colorPrimary">@color/primaryColor</item>-->
-		<!--<item name="colorPrimaryDark">@color/primaryColorDark</item>-->
-		<!--<item name="colorAccent">@color/accentColor</item>-->
+	<!--<item name="colorPrimary">@color/primaryColor</item>-->
+	<!--<item name="colorPrimaryDark">@color/primaryColorDark</item>-->
+	<!--<item name="colorAccent">@color/accentColor</item>-->
+</style>
+
+	<style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+
+	</style>
+
+	<style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+		<item name="windowNoTitle">true</item>
+		<item name="windowActionBar">false</item>
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:textSize">12dp</item>
+	</style>
+
+	<style name="ToolbarTitle">
+		<item name="android:textSize">16dp</item>
+		<item name="android:textStyle">normal</item>
 	</style>
 </resources>

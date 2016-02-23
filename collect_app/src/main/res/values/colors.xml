@@ -19,16 +19,20 @@ the License.
     <drawable name="white">#ffffffff</drawable>
     <drawable name="black">#ff000000</drawable>
 
+    <color name="colorPrimary">#E91E63</color>
+    <color name="colorPrimaryDark">#C2185B</color>
+    <color name="colorPrimaryLight">#F8BBD0</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#727272</color>
+    <color name="dividerColor">#B6B6B6</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blackGrey">#3F3F3F</color>
 
-    <color name="primaryColor">#9b242d</color>
-    <color name="primaryColorDark">#380d10</color>
-    <color name="accentColor">#448aff</color>
 
     <color name="transparentBlack">#90000000</color>
     <color name="time_green">#9ACB00</color>
-
     <color name="opaque_red">#f00</color>
-    <color name="white">#FFFFFF</color>
     <color name="yellow">#FFFF00</color>
     <color name="fuchsia">#FF00FF</color>
     <color name="red">#FF0000</color>
