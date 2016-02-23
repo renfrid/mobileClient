@@ -7,7 +7,7 @@
     android:paddingTop="5dp"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
-    tools:context=".SurveyFormDetailsActivity">
+    tools:context=".activities.SurveyFormDetailsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="Form Id"
             android:textAllCaps="true"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/colorPrimary"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Form status"
-            android:textColor="@color/primaryColorDark"
+            android:textColor="@color/colorPrimary"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
@@ -64,7 +64,7 @@
             android:id="@+id/btn_submit_feedback"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
+            android:background="@color/colorPrimary"
             android:src="@android:drawable/ic_menu_send"
             android:text="@string/submit_feedback" />
 

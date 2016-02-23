@@ -71,8 +71,7 @@
         android:installLocation="auto"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:supportsRtl="true"
-        android:theme="@style/Collect">
+        android:supportsRtl="true">
 
         <provider
             android:name="org.sacids.android.provider.FormsProvider"
@@ -86,11 +85,13 @@
         <activity
             android:name=".activities.MainMenuActivity"
             android:configChanges="orientation"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name"
+            android:theme="@style/Collect"></activity>
         <activity
             android:name=".activities.FormEntryActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
+            android:theme="@style/Collect"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -107,17 +108,21 @@
             android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:theme="@style/Collect"
             android:taskAffinity="" />
         <activity
             android:name=".activities.DrawActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.GoogleDriveActivity"
             android:label="@string/app_name"
+            android:theme="@style/Collect"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.InstanceChooserList"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
 
         <intent-filter>
             <action android:name="android.intent.action.VIEW" />
@@ -130,10 +135,12 @@
 
         <activity
             android:name=".activities.InstanceChooserTabs"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.FormChooserList"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/Collect">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -146,22 +153,28 @@
         </activity>
         <activity
             android:name=".activities.FormManagerList"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.FormDownloadList"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.DataManagerList"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.FileManagerTabs"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.GoogleSheetsUploaderActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.InstanceUploaderList"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/Collect">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -171,37 +184,47 @@
         </activity>
         <activity
             android:name=".activities.InstanceUploaderActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".preferences.PreferencesActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".preferences.GooglePreferencesActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".preferences.OtherPreferencesActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".preferences.AggregatePreferencesActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".preferences.AdminPreferencesActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.FormHierarchyActivity"
             android:label="@string/app_name" />
         <activity
             android:name=".activities.GeoPointActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.GeoPointMapActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.GeoPointMapNotDraggableActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.BearingActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:theme="@style/Collect"/>
         <activity
             android:name=".activities.SplashScreenActivity"
             android:label="@string/app_name"
@@ -249,11 +272,13 @@
 
 
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" />
+            android:name=".activities.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/MyMaterialTheme"/>
         <activity
-            android:name=".SurveyFormDetailsActivity"
+            android:name=".activities.SurveyFormDetailsActivity"
             android:label="@string/title_activity_survery_form_status"
+            android:theme="@style/Collect"
             android:windowSoftInputMode="stateHidden" />
 
     </application>

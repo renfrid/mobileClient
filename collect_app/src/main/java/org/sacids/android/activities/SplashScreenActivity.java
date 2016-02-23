@@ -14,7 +14,6 @@
 
 package org.sacids.android.activities;
 
-import org.sacids.android.MainActivity;
 import org.sacids.android.R;
 import org.sacids.android.application.Collect;
 import org.sacids.android.preferences.PreferencesActivity;
