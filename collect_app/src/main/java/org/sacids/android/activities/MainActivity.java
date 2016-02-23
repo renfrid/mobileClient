@@ -1,4 +1,4 @@
-package org.sacids.android;
+package org.sacids.android.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,8 +18,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.sacids.android.activities.FormChooserList;
-import org.sacids.android.activities.MainMenuActivity;
+import org.sacids.android.R;
+import org.sacids.android.SurveyFormDetailsActivity;
 import org.sacids.android.application.Collect;
 import org.sacids.android.database.DataSource;
 import org.sacids.android.models.SurveyForm;

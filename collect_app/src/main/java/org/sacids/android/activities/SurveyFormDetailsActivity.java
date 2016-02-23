@@ -1,16 +1,12 @@
-package org.sacids.android;
+package org.sacids.android.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -35,12 +31,11 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.sacids.android.R;
 import org.sacids.android.adapters.FeedbackListAdapter;
-import org.sacids.android.application.Collect;
 import org.sacids.android.models.Feedback;
 import org.sacids.android.models.SurveyForm;
 import org.sacids.android.preferences.PreferencesActivity;
-import org.sacids.android.provider.InstanceProviderAPI;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
