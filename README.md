@@ -27,3 +27,5 @@ The `google-play-services` project should be pulled and at the tip.
 
 Then, import the `collect/build.gradle` file into Android Studio.
 
+Delete android-supportV4 from /lib folder if build failed on dependence with android-supportV7
+
