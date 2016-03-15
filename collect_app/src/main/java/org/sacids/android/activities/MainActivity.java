@@ -1,31 +1,40 @@
 package org.sacids.android.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
+
 import org.sacids.android.R;
-import org.sacids.android.application.Collect;
 import org.sacids.android.preferences.PreferencesActivity;
+import org.sacids.android.receivers.FeedbackReceiver;
 
 
-public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
+public class MainActivity extends AppCompatActivity {
 
     private static String TAG = MainActivity.class.getSimpleName();
 
+    private FormsFragment currentFragment;
+
     private Toolbar mToolbar;
-    private FragmentDrawer drawerFragment;
-    private boolean doubleBackToExitPressedOnce;
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
 
 
     @Override
@@ -33,20 +42,129 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //default fragment view
+        if (savedInstanceState == null){
+            currentFragment = new FormsFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame, currentFragment).commit();
+        }
+
         //TOOLBAR
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        //Navigation drawer
-        drawerFragment = (FragmentDrawer)
-                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
-        drawerFragment.setDrawerListener(this);
+        //Initializing NavigationView
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-        // display the first navigation drawer view on app launch
-        displayView(0);
+        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+            // This method will trigger on item Click of navigation menu
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+
+                //Checking if the item is in checked state or not, if not make it in checked state
+                if (menuItem.isChecked()) menuItem.setChecked(false);
+                else menuItem.setChecked(true);
+
+                //Closing drawer on item click
+                drawerLayout.closeDrawers();
+
+                Fragment fragment = null;
+
+                //Check to see which item was being clicked and perform appropriate action
+                switch (menuItem.getItemId()) {
+
+                    //Replacing the main content with ContentFragment Which is our Inbox View;
+                    case R.id.home:
+                        //Forms Fragment
+                        currentFragment = new FormsFragment();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frame, currentFragment);
+                        fragmentTransaction.commit();
+                        return true;
+
+                    case R.id.blank_form:
+                        //fill blank form
+                        Intent blankForms = new Intent(getApplicationContext(),
+                                FormChooserList.class);
+                        startActivity(blankForms);
+                        return true;
+                    case R.id.edit_form:
+                        //Edit forms
+                        Intent editForms = new Intent(getApplicationContext(),
+                                InstanceChooserList.class);
+                        startActivity(editForms);
+                        return true;
+                    case R.id.send_forms:
+                        //send finalized Forms
+                        Intent sendForms = new Intent(getApplicationContext(),
+                                InstanceUploaderList.class);
+                        startActivity(sendForms);
+                        return true;
+                    case R.id.delete_forms:
+                        //delete saved forms
+                        Intent deleteForms = new Intent(getApplicationContext(),
+                                FileManagerTabs.class);
+                        startActivity(deleteForms);
+                        return true;
+                    case R.id.download_forms:
+                        //form_list
+                        Intent downloadForms = new Intent(getApplicationContext(),
+                                FormDownloadList.class);
+                        startActivity(downloadForms);
+                        return true;
+                    case R.id.settings:
+                        //General Settings
+                        Intent mySettings = new Intent(getApplicationContext(), PreferencesActivity.class);
+                        startActivity(mySettings);
+                        return true;
+                    default:
+                        return true;
+
+                }
+            }
+        });
+
+        // Initializing Drawer Layout and ActionBarToggle
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+                mToolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        //Setting the actionbarToggle to drawer layout
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        //calling sync state is necessay or else your hamburger icon wont show up
+        actionBarDrawerToggle.syncState();
+
+
+        // Retrieve a PendingIntent that will perform a broadcast
+        Intent feedbackIntent = new Intent(this, FeedbackReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, feedbackIntent, 0);
+
+        // Set the alarm here.
+        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 6*6*1000000; // 1Hours
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
     }
+
+
 
 
     @Override
@@ -62,103 +180,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-
-            case R.id.action_fill_new_form:
-                //Launching the fill blank form Activity
-                Collect.getInstance().getActivityLogger().logAction(this, "fillBlankForm", "click");
-                Intent i = new Intent(getApplicationContext(), FormChooserList.class);
-                startActivity(i);
-                return true;
-
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-
             default:
                 return false;
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (doubleBackToExitPressedOnce){
-            super.onBackPressed();
-            return;
-        }
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Press BACK again to exit", Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-
-            }
-        }, 2000);
-    }
-
-    @Override
-    public void onDrawerItemSelected(View view, int position) {
-        displayView(position);
-    }
-
-    private void displayView(int position) {
-        Fragment fragment = null;
-        String title = getString(R.string.app_name);
-        switch (position) {
-            case 0:
-                //Forms Fragment
-                fragment = new FormsFragment();
-                break;
-            case 1:
-                //form_list
-                Intent downloadForms = new Intent(getApplicationContext(),
-                        FormDownloadList.class);
-                startActivity(downloadForms);
-                break;
-            case 2:
-                //fill blank form
-                Intent blankForms = new Intent(getApplicationContext(),
-                        FormChooserList.class);
-                startActivity(blankForms);
-                break;
-            case 3:
-                //Edit forms
-                Intent editForms = new Intent(getApplicationContext(),
-                        InstanceChooserList.class);
-                startActivity(editForms);
-                break;
-            case 4:
-                //send finalized Forms
-                Intent sendForms = new Intent(getApplicationContext(),
-                        InstanceUploaderList.class);
-                startActivity(sendForms);
-                break;
-            case 5:
-                //delete saved forms
-                Intent deleteForms = new Intent(getApplicationContext(),
-                        FileManagerTabs.class);
-                startActivity(deleteForms);
-                break;
-            case 6:
-                //General Settings
-                Intent mySettings = new Intent(this, PreferencesActivity.class);
-                startActivity(mySettings);
-                break;
-
-            default:
-                break;
-        }
-
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_body, fragment);
-            fragmentTransaction.commit();
-            //set the toolbar title
-            getSupportActionBar().setTitle(title);
-        }
     }
 
 }

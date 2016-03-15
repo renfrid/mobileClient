@@ -1,23 +1,24 @@
 package org.sacids.android.activities;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.FieldNamingStrategy;
@@ -44,24 +45,26 @@ import java.util.List;
 
 import web.RestClient;
 
-public class SurveyFormDetailsActivity extends Activity {
-
-    private static final boolean DO_NOT_EXIT = false;
-    private AlertDialog mAlertDialog;
+public class SurveyFeedbackActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
 
     private static String TAG = "SurveyForm";
 
+    //Toolbar and Action bar
+    Toolbar mToolbar;
+    ActionBar actionBar;
+
     private List<Feedback> feedbackList = new ArrayList<Feedback>();
     private FeedbackListAdapter adapter;
-    private ListView listFeedbacks;
-    private Button btnEditForm;
+    private ListView listFeedback;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    // initially offset will be 0, later will be updated while parsing the json
+    private int offSet = 0;
+
     private ImageButton btnFeeedback;
     private EditText editFeedback;
-    private TextView formName;
-    private TextView formStatus;
     private ProgressDialog progressDialog;
-
     private SharedPreferences mSharedPreferences;
     private String username;
     private String password;
@@ -73,52 +76,79 @@ public class SurveyFormDetailsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_survey_form_details);
+        setContentView(R.layout.activity_survey_feedback);
+
+        //Get intent from MainActivity
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            mForm = b.getParcelable(".models.SurveyForm");
+        }
+
+        //get form name
+        String formName = mForm.getDisplayName();
+
+        //get form status
+        String formStatus = mForm.getStatus();
+
+        //ToolBar
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setTitle(formName);
+        mToolbar.setSubtitle(formStatus);
+        setSupportActionBar(mToolbar);
+
+        //action bar
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME, getString(R.string.default_sacids_username));
         password = mSharedPreferences.getString(PreferencesActivity.KEY_PASSWORD, getString(R.string.default_sacids_password));
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL, getString(R.string.default_server_url));
 
-        formName = (TextView) findViewById(R.id.tvform_name);
-        formStatus = (TextView) findViewById(R.id.tv_form_status);
-        listFeedbacks = (ListView) findViewById(R.id.list_feedback);
+        listFeedback = (ListView) findViewById(R.id.list_feedback);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+
+        //get feedback from server
+        getFeedbackFromServer();
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                getFeedbackFromServer(); //Swipe to load data
+            }
+        });
+
+        //For submitting feedback to server
         editFeedback = (EditText) findViewById(R.id.edit_feedback);
         btnFeeedback = (ImageButton) findViewById(R.id.btn_submit_feedback);
 
-        Bundle b = getIntent().getExtras();
-        if (b != null) {
-            mForm = b.getParcelable(".models.SurveyForm");
-            Log.d(TAG, "From parcel => " + mForm.toString());
+        //if submit feedback
+        btnFeeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                message = editFeedback.getText().toString();
 
-            //set form name
-            String form_name = mForm.getDisplayName();
-            formName.setText(form_name);
-
-            //set form status
-            String form_status = mForm.getStatus();
-            formStatus.setText(form_status);
-
-            // get feedback from the server
-            getFeedbackFromServer();
-
-
-            //if submit feedback
-            btnFeeedback.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    message = editFeedback.getText().toString();
-
-                    if (editFeedback.getText().length() < 1) {
-                        editFeedback.setError("Your feedback is required");
-                    } else {
-                        //post feedback to the server
-                        postFeedbackToServer();
-                    }
+                if (editFeedback.getText().length() < 1) {
+                    editFeedback.setError("Your feedback is required");
+                } else {
+                    //post feedback to the server
+                    postFeedbackToServer();
                 }
-            });
+            }
+        });
 
-        }
+    }
+
+    /**
+     * This method is called when swipe refresh is pulled down
+     */
+    @Override
+    public void onRefresh() {
+        // get feedback from the server
+        getFeedbackFromServer();
     }
 
     private void getFeedbackFromServer() {
@@ -130,10 +160,8 @@ public class SurveyFormDetailsActivity extends Activity {
             Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
         }
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("Loading feedback...");
-        progressDialog.show();
+        // showing refresh animation before making http call
+        swipeRefreshLayout.setRefreshing(true);
 
         final RequestParams params = new RequestParams();
         params.add("form_id", mForm.getJrFormId());
@@ -147,7 +175,10 @@ public class SurveyFormDetailsActivity extends Activity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
+                // stopping swipe refresh
+                swipeRefreshLayout.setRefreshing(false);
+
                 Log.d(TAG, response.toString());
                 Log.d(TAG, headers.toString());
 
@@ -161,23 +192,26 @@ public class SurveyFormDetailsActivity extends Activity {
                     Log.d(TAG, "Found " + feedbackList.size() + " feedback");
 
                     //feedbackList adapter
-                    adapter = new FeedbackListAdapter(SurveyFormDetailsActivity.this, feedbackList);
-                    listFeedbacks.setAdapter(adapter);
-                    //refreshDisplay();
+                    adapter = new FeedbackListAdapter(SurveyFeedbackActivity.this, feedbackList);
+                    listFeedback.setAdapter(adapter);
+
+
                 } else if (statusCode == 204) {
-                    Log.d(TAG, "No feedback to display");
-                    Toast.makeText(SurveyFormDetailsActivity.this, "No Feedback from server", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "No feedback at the moment");
+                    Toast.makeText(SurveyFeedbackActivity.this, "No Feedback at the moment", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
+                // stopping swipe refresh
+                swipeRefreshLayout.setRefreshing(false);
 
                 if (statusCode == 401) {
                     //TODO apply authentication here
-                    Toast.makeText(SurveyFormDetailsActivity.this, "Unauthorized " + responseString, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SurveyFeedbackActivity.this, "Unauthorized " + responseString, Toast.LENGTH_SHORT).show();
                 }
                 Log.d(TAG, headers.toString());
                 Log.d(TAG, "Failed " + responseString);
@@ -222,13 +256,13 @@ public class SurveyFormDetailsActivity extends Activity {
                     //successful post data
                     editFeedback.setText("");
                     Log.d(TAG, "Saving feedback success");
-                    Toast.makeText(SurveyFormDetailsActivity.this, "Feedback sent, will get back to you soon", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SurveyFeedbackActivity.this, "Feedback saved, will get back to you soon", Toast.LENGTH_SHORT).show();
 
                 } else if (statusCode == 400) {
                     //Failed to post
                     editFeedback.setText("");
                     Log.d(TAG, "Saving Feedback failed");
-                    Toast.makeText(SurveyFormDetailsActivity.this, "Failed to send feedback", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SurveyFeedbackActivity.this, "Failed to send feedback", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -237,11 +271,11 @@ public class SurveyFormDetailsActivity extends Activity {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 progressDialog.dismiss();
 
-                Toast.makeText(SurveyFormDetailsActivity.this, responseString, Toast.LENGTH_SHORT);
+                Toast.makeText(SurveyFeedbackActivity.this, responseString, Toast.LENGTH_SHORT);
 
                 if (statusCode == 400) {
                     //Failed to post
-                    Toast.makeText(SurveyFormDetailsActivity.this, "Failed to send feedback " + responseString, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SurveyFeedbackActivity.this, "Failed to send feedback " + responseString, Toast.LENGTH_SHORT).show();
                 }
                 Log.d(TAG, headers.toString());
                 Log.d(TAG, "Failed " + responseString);
@@ -253,7 +287,7 @@ public class SurveyFormDetailsActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_servey_form_details, menu);
+        getMenuInflater().inflate(R.menu.menu_survey_feedback, menu);
         return true;
     }
 
@@ -267,8 +301,13 @@ public class SurveyFormDetailsActivity extends Activity {
         //noinspection SimplifiableIfStatement
 
         switch (item.getItemId()) {
+
             case R.id.action_refresh:
                 getFeedbackFromServer();
+                break;
+
+            case android.R.id.home:
+                onBackPressed();
                 break;
         }
 
@@ -278,7 +317,7 @@ public class SurveyFormDetailsActivity extends Activity {
     private List<Feedback> getMessagesFromJsonResponse(JSONArray jsonArray) throws JSONException {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss");
+        gsonBuilder.setDateFormat("dd-MM-yyyy HH:mm:ss");
         gsonBuilder.setFieldNamingStrategy(new FieldNamingStrategy() {
 
             @Override
@@ -290,7 +329,7 @@ public class SurveyFormDetailsActivity extends Activity {
                     return "form_id";
 
                 if (field.getName().equals("date"))
-                    return "created_at";
+                    return "date_created";
 
                 return field.getName();
             }

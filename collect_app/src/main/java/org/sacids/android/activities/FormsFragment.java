@@ -29,9 +29,9 @@ import java.util.List;
  */
 public class FormsFragment extends Fragment {
 
-    List<SurveyForm> surveyForms = new ArrayList<SurveyForm>();
-    ListView lvSurveyFormsStatus;
-    SurveyFormListAdapter adapter;
+    private List<SurveyForm> surveyForms = new ArrayList<SurveyForm>();
+    private ListView listSurveyForms;
+    private SurveyFormListAdapter adapter;
 
     private static String TAG = "Forms Fragment";
 
@@ -49,7 +49,7 @@ public class FormsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_forms, container, false);
 
         SharedPreferences mSharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(getContext());
+                .getDefaultSharedPreferences(getActivity());
         String username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME, "");
         String password = mSharedPreferences.getString(PreferencesActivity.KEY_PASSWORD, "");
 
@@ -60,26 +60,26 @@ public class FormsFragment extends Fragment {
         Cursor c = ds.getAllCursor();
         surveyForms = cursorToList(c);
 
+        //listing form details
+        listSurveyForms = (ListView) rootView.findViewById(R.id.lv_survey_forms_status);
+        adapter = new SurveyFormListAdapter(getActivity(), surveyForms);
+        listSurveyForms.setAdapter(adapter);
 
-        lvSurveyFormsStatus = (ListView) rootView.findViewById(R.id.lv_survey_forms_status);
-        lvSurveyFormsStatus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //OnClick List view
+        listSurveyForms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 // TODO: 1/29/2016 This should just pass FORM details to the other activity then we can perform the below task
                 SurveyForm surveyForm = surveyForms.get(position);
-
                 //start form details Activity here.
-                Intent formDetailsIntent = new Intent(getActivity(), SurveyFormDetailsActivity.class);
+                Intent formDetailsIntent = new Intent(getActivity(), SurveyFeedbackActivity.class);
                 formDetailsIntent.putExtra(".models.SurveyForm", surveyForm);
                 startActivity(formDetailsIntent);
             }
         });
-        refreshDisplay();
-
 
         return rootView;
-
     }
 
     private List<SurveyForm> cursorToList(Cursor c) {
@@ -108,11 +108,5 @@ public class FormsFragment extends Fragment {
         mForm.setDisplaySubText(c.getString(c.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT)));
         return mForm;
     }
-
-    private void refreshDisplay() {
-        adapter = new SurveyFormListAdapter(getActivity(), surveyForms);
-        lvSurveyFormsStatus.setAdapter(adapter);
-    }
-
 
 }

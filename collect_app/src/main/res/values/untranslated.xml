@@ -7,40 +7,30 @@
 	the specific language governing permissions and limitations under the License. -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- strings that should not be translated -->
-    <string name="app_name" translatable="false">ODKClient</string>
+    <string name="app_name" translatable="false">AfyaData</string>
+    <string name="app_slogan">Simplify data collection</string>
     <string name="protocol_odk_default" translatable="false">odk_default</string>
     <string name="protocol_google_sheets" translatable="false">google_sheets</string>
     <string name="default_form_processing_logic" translatable="false">-1</string>
     <string name="protocol_other" translatable="false">other_protocol</string>
-    <string name="default_server_url" translatable="false">https://opendatakit.appspot.com</string>
+    <string name="default_server_url" translatable="false">http://192.168.8.150/afyadata</string>
     <string name="default_odk_formlist" translatable="false">/formList</string>
     <string name="default_odk_submission" translatable="false">/submission</string>
 
 
     <string name="default_sacids_username" translatable="false">admin</string>
-    <string name="default_sacids_password" translatable="false">12345678</string>
+    <string name="default_sacids_password" translatable="false">sacidsdemo</string>
     <item name="mapview" type="id" />
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="nav_item_forms">All Forms</string>
-    <string name="nav_item_download">Download Forms</string>
+    <string name="nav_item_forms">Home</string>
     <string name="nav_item_blank">Fill Blank Forms</string>
     <string name="nav_item_edit">Edit Saved Forms</string>
     <string name="nav_item_send">Send Finalized Forms</string>
     <string name="nav_item_delete">Delete Saved Forms</string>
+    <string name="nav_item_download">Download Forms</string>
     <string name="nav_item_settings">Settings</string>
-
-    <!-- navigation drawer item labels  -->
-    <string-array name="nav_drawer_labels">
-        <item>@string/nav_item_forms</item>
-        <item>@string/nav_item_download</item>
-        <item>@string/nav_item_blank</item>
-        <item>@string/nav_item_edit</item>
-        <item>@string/nav_item_send</item>
-        <item>@string/nav_item_delete</item>
-        <item>@string/nav_item_settings</item>
-    </string-array>
 
 </resources>

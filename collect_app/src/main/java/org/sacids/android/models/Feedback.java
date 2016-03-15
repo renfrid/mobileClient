@@ -3,7 +3,7 @@ package org.sacids.android.models;
 import java.util.Date;
 
 /**
- * Created by Godluck Akyoo on 2/2/2016.
+ * Created by Renfrid Ngolongolo on 2/2/2016.
  */
 public class Feedback {
 
@@ -12,8 +12,22 @@ public class Feedback {
     private String userName;
     private String formId;
     private String message;
-    private Date date;
+    private String dateCreated;
     private String viewedBy;
+
+    //empty Constructor
+    public Feedback(){
+
+    }
+
+
+    //Another constructor
+    public Feedback(long _id, String _formId, String _message, String _date){
+        this.id = _id;
+        this.formId = _formId;
+        this.message = _message;
+        this.dateCreated = _date;
+    }
 
     public long getId() {
         return id;
@@ -55,12 +69,12 @@ public class Feedback {
         this.message = message;
     }
 
-    public Date getDate() {
-        return date;
+    public String getDateCreated() {
+        return dateCreated;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public String getViewedBy() {
@@ -78,7 +92,7 @@ public class Feedback {
                 ", userId=" + userId +
                 ", formId='" + formId + '\'' +
                 ", message='" + message + '\'' +
-                ", date=" + date +
+                ", dateCreated=" + dateCreated +
                 ", viewedBy='" + viewedBy + '\'' +
                 '}';
     }

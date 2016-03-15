@@ -6,27 +6,30 @@
 	<item name="android:scrollbarSize">1.75mm</item>
 	<item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
 	<item name="android:fadeScrollbars">false</item>
-
-	<!--<item name="colorPrimary">@color/primaryColor</item>-->
-	<!--<item name="colorPrimaryDark">@color/primaryColorDark</item>-->
-	<!--<item name="colorAccent">@color/accentColor</item>-->
 </style>
 
-	<style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+	<!-- Base application theme. -->
+	<!--Material design -->
+	<style name="AppTheme" parent="AppTheme.Base">
 
 	</style>
 
-	<style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+	<style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
 		<item name="windowNoTitle">true</item>
 		<item name="windowActionBar">false</item>
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
-		<item name="android:textSize">12dp</item>
+		<item name="android:textSize">12sp</item>
 	</style>
 
 	<style name="ToolbarTitle">
-		<item name="android:textSize">16dp</item>
+		<item name="android:textSize">16sp</item>
+		<item name="android:textStyle">normal</item>
+	</style>
+
+	<style name="NavigationStyle">
+		<item name="android:textSize">14sp</item> <!-- menu item text size-->
 		<item name="android:textStyle">normal</item>
 	</style>
 </resources>

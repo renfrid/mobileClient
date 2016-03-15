@@ -13,21 +13,21 @@ import org.sacids.android.models.Feedback;
 import java.util.List;
 
 /**
- * Created by Renfrid-Sacids on 2/11/2016.
+ * Created by Renfrid Ngolongolo on 2/11/2016.
  */
 public class FeedbackListAdapter extends BaseAdapter {
 
     private Context context;
-    private List<Feedback> messageList;
+    private List<Feedback> feedbackList;
 
-    public FeedbackListAdapter(Context context, List<Feedback> feedbacks) {
+    public FeedbackListAdapter(Context context, List<Feedback> feedback) {
         this.context = context;
-        this.messageList = feedbacks;
+        this.feedbackList = feedback;
     }
 
     @Override
     public int getCount() {
-        return messageList.size();
+        return feedbackList.size();
     }
 
     @Override
@@ -45,17 +45,14 @@ public class FeedbackListAdapter extends BaseAdapter {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = li.inflate(R.layout.single_message, null);
 
-        Feedback msg = messageList.get(position);
+        Feedback msg = feedbackList.get(position);
 
         TextView tv = (TextView) view.findViewById(R.id.tv_message);
         tv.setText(msg.getMessage());
 
         tv = (TextView) view.findViewById(R.id.tv_date_sent);
-        tv.setText(msg.getDate().toString());
+        tv.setText(msg.getDateCreated().toString());
 
-//            tv = (TextView) view.findViewById(R.id.tv_form_status);
-//            tv.setText(msg.getViewedBy());
-        // change color depending on the form current form status
 
         return view;
     }

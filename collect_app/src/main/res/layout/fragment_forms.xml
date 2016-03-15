@@ -8,12 +8,6 @@
     android:weightSum="1"
     tools:context="org.sacids.android.MainActivity">
 
-    <Button
-        android:id="@+id/btn_start_odk_forms"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ODK Forms" />
-
     <ListView
         android:id="@+id/lv_survey_forms_status"
         android:layout_width="match_parent"
